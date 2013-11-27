@@ -25,8 +25,10 @@ function init(rootElement) {
 	    this.route("about", { path: "/about" });
 	    this.route("page", { path: "/page" });
 	    this.route("hello", { path: "/hello" });
-	    this.route("movies", {path: "/movie"});
-	    this.route("movie", {path: "/movie/:id"});
+	    this.route("movies", { path: "/movie" });
+	    this.route("movie", { path: "/movie/:id" });
+	    this.route("persons", { path: "/person" });
+	    this.route("person", { path: "/person/:id" });
 	});
 
 	App1.AboutView = Ember.View.extend({
@@ -65,6 +67,7 @@ function init(rootElement) {
 
 	App1.MovieRoute = Ember.Route.extend({
 	    setupController: function(controller, params) {
+		controller.set('movie', {});
 		this.fetch(params.id, controller);
 	    },
 	    fetch: function(movie_id, controller) {
@@ -82,6 +85,57 @@ function init(rootElement) {
 	    }
 	});
 
+	App1.PersonView = Ember.View.extend({
+	    templateName: 'App1-person'
+	});
+
+	App1.PersonController = Ember.Controller.extend({
+	    person: {},
+	    movies: []
+	});
+
+	App1.PersonsRoute = Ember.Route.extend({
+	    beforeModel: function() {
+		this.transitionTo('person', 613907);
+	    }
+	});
+
+	App1.PersonRoute = Ember.Route.extend({
+	    setupController: function(controller, params) {
+		controller.set('person', {});
+		controller.set('movies', []);
+		this.fetch(params.id, controller);
+	    },
+	    fetch: function(person_id, controller) {
+		$.ajax({
+		    url: "http://nmdb.nocrew.org/person/"+person_id+".json",
+		    cache: false,
+		    type: "GET",
+		    dataType: "json",
+		    contentType: "application/json",
+		    success: function(data) {
+			controller.set('person', data.person);
+			var movies = [];
+			data.person.occupations.forEach(function(item) {
+			    if(item.character && item.character.match(/(himself|herself|themselves)/i)) {
+				return;
+			    }
+			    if(item.role.role == "actor" || item.role.role == "actress") {
+				movies.push(item);
+			    }
+			});
+			controller.set('movies', movies.sort(function(a,b) {
+			    return b.movie.movie_sort_value - a.movie.movie_sort_value;
+			}));
+			console.log("DEBUG: Fetched data...", data);
+		    }
+		});
+	    }
+	});
+
+	Ember.Handlebars.registerHelper('index', function(obj) {
+	    return obj.data.view.contentIndex+1;
+	});
     });
 }
 

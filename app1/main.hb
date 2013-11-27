@@ -10,7 +10,7 @@
 	  <li>{{#link-to 'about'}}About{{/link-to}}</li>
 	  <li>{{#link-to 'page'}}Page{{/link-to}}</li>
 	  <li>{{#link-to 'hello'}}Hello{{/link-to}}</li>
-	  <li>{{#link-to 'movie'}}Movie{{/link-to}}</li>
+	  <li>{{#link-to 'movies'}}Movie{{/link-to}}</li>
 	</ul>
 	<div class="col-sm-10">
 	  <div class="container">
@@ -77,7 +77,29 @@
 	{{#each movie.cast_members}}
 	<tr>
 	  <th>{{sort_value}}</th>
-	  <td>{{person_name}}</td>
+	  <td>{{#link-to 'person' person_id}}{{person_name}}{{/link-to}}</td>
+	  <td>{{character}}</td>
+	</tr>
+	{{/each}}
+      </tbody>
+    </table>
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="App1-person">
+    <div class="page-header"><h2>{{person.first_name}} {{person.last_name}}</h2></div>
+    <table class="table">
+      <thead>
+	<tr>
+	  <th></th>
+	  <th>Movie</th>
+	  <th>Character</th>
+	</tr>
+      </thead>
+      <tbody>
+	{{#each movies}}
+	<tr>
+	  <th>{{index}}</th>
+	  <td>{{#link-to 'movie' movie.id}}{{movie.full_title}}{{/link-to}}</td>
 	  <td>{{character}}</td>
 	</tr>
 	{{/each}}

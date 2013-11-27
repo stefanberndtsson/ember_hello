@@ -79,7 +79,6 @@ function init(rootElement) {
 		    contentType: "application/json",
 		    success: function(data) {
 			controller.set('movie', data.movie);
-			console.log("DEBUG: Fetched data...", data);
 		    }
 		});
 	    }
@@ -127,7 +126,6 @@ function init(rootElement) {
 			controller.set('movies', movies.sort(function(a,b) {
 			    return b.movie.movie_sort_value - a.movie.movie_sort_value;
 			}));
-			console.log("DEBUG: Fetched data...", data);
 		    }
 		});
 	    }

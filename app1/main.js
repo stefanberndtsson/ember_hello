@@ -1,4 +1,4 @@
-function loadTemplate(url, name, callback) {
+function loadTemplate(url, callback) {
     console.log("DEBUG: Loading template");
     var contents = $.get(url, function(templateText) {
 	Ember.Handlebars.bootstrap(templateText);
@@ -10,13 +10,13 @@ function loadTemplate(url, name, callback) {
 
 function init(rootElement) {
     console.log(rootElement);
-    loadTemplate("app1/main.hb", "App1-main", function() {
+    loadTemplate("app1/main.hb", function() {
 	App1 = Ember.Application.create({
 	    rootElement: '#'+rootElement
 	});
 
 	App1.ApplicationController = Ember.Controller.extend();
-    
+	
 	App1.ApplicationView = Ember.View.extend({
 	    templateName: 'App1-main'
 	});
@@ -25,6 +25,8 @@ function init(rootElement) {
 	    this.route("about", { path: "/about" });
 	    this.route("page", { path: "/page" });
 	    this.route("hello", { path: "/hello" });
+	    this.route("movies", {path: "/movie"});
+	    this.route("movie", {path: "/movie/:id"});
 	});
 
 	App1.AboutView = Ember.View.extend({
@@ -39,13 +41,47 @@ function init(rootElement) {
 	    templateName: 'App1-hello'
 	});
 
+	App1.HelloController = Ember.Controller.extend({
+	    helloStr: "World"
+	});
+
 	App1.IndexView = Ember.View.extend({
 	    templateName: 'App1-home'
 	});
 
-	App1.HelloController = Ember.Controller.extend({
-	    helloStr: "World"
+	App1.MovieView = Ember.View.extend({
+	    templateName: 'App1-movie'
 	});
+
+	App1.MovieController = Ember.Controller.extend({
+	    movie: {},
+	});
+	
+	App1.MoviesRoute = Ember.Route.extend({
+	    beforeModel: function() {
+		this.transitionTo('movie', 613907);
+	    }
+	});
+
+	App1.MovieRoute = Ember.Route.extend({
+	    setupController: function(controller, params) {
+		this.fetch(params.id, controller);
+	    },
+	    fetch: function(movie_id, controller) {
+		$.ajax({
+		    url: "http://nmdb.nocrew.org/movie/"+movie_id+".json?richness=reduced", 
+		    cache: false,
+		    type: "GET",
+		    dataType: "json",
+		    contentType: "application/json",
+		    success: function(data) {
+			controller.set('movie', data.movie);
+			console.log("DEBUG: Fetched data...", data);
+		    }
+		});
+	    }
+	});
+
     });
 }
 

@@ -10,6 +10,7 @@
 	  <li>{{#link-to 'about'}}About{{/link-to}}</li>
 	  <li>{{#link-to 'page'}}Page{{/link-to}}</li>
 	  <li>{{#link-to 'hello'}}Hello{{/link-to}}</li>
+	  <li>{{#link-to 'movie'}}Movie{{/link-to}}</li>
 	</ul>
 	<div class="col-sm-10">
 	  <div class="container">
@@ -19,6 +20,7 @@
 	  </div>
 	</div>
       </div>
+    </div>
   </script>
 
   <script type="text/x-handlebars" data-template-name="App1-home">
@@ -28,21 +30,21 @@
     <p>This is the hello world app using ember. Select stuff to the left.</p>
     {{#link-to 'hello' classNames="btn btn-primary"}}Hello World{{/link-to}}
   </script>
-
+  
   <script type="text/x-handlebars" data-template-name="App1-about">
     <div class="page-header">
       <h2>About</h2>
     </div>
     <p>About About About!!</p>
   </script>
-
+  
   <script type="text/x-handlebars" data-template-name="App1-page">
     <div class="page-header">
       <h2>Page</h2>
     </div>
     <p>Page Page Page!!</p>
   </script>
-
+  
   <script type="text/x-handlebars" data-template-name="App1-hello">
     <div class="page-header">
       <h2>Hello {{helloStr}}!</h2>
@@ -54,5 +56,32 @@
 	{{input valueBinding="helloStr" classNames="form-control"}}
       </div>
     </form>
+  </script>
+  
+  <script type="text/x-handlebars" data-template-name="App1-movie">
+    <div class="page-header"><h2>{{movie.full_title}}</h2></div>
+    <div>
+      {{#each movie.genres}}
+      <span class="label label-default">{{genre}}</span>
+      {{/each}}
+    </div>
+    <table class="table">
+      <thead>
+	<tr>
+	  <th></th>
+	  <th>Cast</th>
+	  <th>Character</th>
+	</tr>
+      </thead>
+      <tbody>
+	{{#each movie.cast_members}}
+	<tr>
+	  <th>{{sort_value}}</th>
+	  <td>{{person_name}}</td>
+	  <td>{{character}}</td>
+	</tr>
+	{{/each}}
+      </tbody>
+    </table>
   </script>
 </div>

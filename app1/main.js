@@ -8,19 +8,21 @@ function loadTemplate(url, callback) {
     });
 }
 
-function init(rootElement) {
-    console.log(rootElement);
-    loadTemplate("app1/main.hb", function() {
+function init(rootElement, scriptHost) {
+    console.log(rootElement, scriptHost);
+    loadTemplate(scriptHost+"app1/main.hb", function() {
 	App1 = Ember.Application.create({
-	    rootElement: '#'+rootElement
+	    rootElement: '#'+rootElement,
+	    Resolver: Ember.DefaultResolver.extend({
+		resolveTemplate: function(parsedName) {
+		    parsedName.fullNameWithoutType = "App1-"+parsedName.fullNameWithoutType;
+		    return this._super(parsedName);
+		}
+	    })
 	});
 
 	App1.ApplicationController = Ember.Controller.extend();
 	
-	App1.ApplicationView = Ember.View.extend({
-	    templateName: 'App1-main'
-	});
-
 	App1.Router.map(function() {
 	    this.route("about", { path: "/about" });
 	    this.route("page", { path: "/page" });
@@ -31,28 +33,12 @@ function init(rootElement) {
 	    this.route("person", { path: "/person/:id" });
 	});
 
-	App1.AboutView = Ember.View.extend({
-	    templateName: 'App1-about'
-	});
-
-	App1.PageView = Ember.View.extend({
-	    templateName: 'App1-page'
-	});
-
-	App1.HelloView = Ember.View.extend({
-	    templateName: 'App1-hello'
+	App1.ApplicationView = Ember.View.extend({
+	    templateName: 'main'
 	});
 
 	App1.HelloController = Ember.Controller.extend({
 	    helloStr: "World"
-	});
-
-	App1.IndexView = Ember.View.extend({
-	    templateName: 'App1-home'
-	});
-
-	App1.MovieView = Ember.View.extend({
-	    templateName: 'App1-movie'
 	});
 
 	App1.MovieController = Ember.Controller.extend({
@@ -82,10 +68,6 @@ function init(rootElement) {
 		    }
 		});
 	    }
-	});
-
-	App1.PersonView = Ember.View.extend({
-	    templateName: 'App1-person'
 	});
 
 	App1.PersonController = Ember.Controller.extend({
@@ -139,4 +121,8 @@ function init(rootElement) {
 
 var scripts = document.getElementsByTagName( 'script' );
 var thisScriptTag = scripts[ scripts.length - 1 ];
-init(thisScriptTag.dataset.rootElement);
+var rootElement = thisScriptTag.dataset.rootElement;
+var scriptHost = thisScriptTag.dataset.srcDir;
+$(function() {
+    init(rootElement, scriptHost);
+});

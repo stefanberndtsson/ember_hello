@@ -1,11 +1,11 @@
 <div>
   <script type="text/x-handlebars" data-template-name="App1-main">
-    <div class="container">
-      <div class="row">
+    <div class="container-fluid">
+      <div class="row-fluid">
 	<h1 class="well col-md-12">Hello World App</h1>
       </div>
-      <div class="row">
-	<ul class="nav nav-pills col-sm-2 col-md-1">
+      <div class="row-fluid">
+	<ul class="nav nav-pills col-sm-2 col-md-2">
 	  <li>{{#link-to 'index'}}Home{{/link-to}}</li>
 	  <li>{{#link-to 'about'}}About{{/link-to}}</li>
 	  <li>{{#link-to 'page'}}Page{{/link-to}}</li>
@@ -13,8 +13,8 @@
 	  <li>{{#link-to 'movies'}}Movie{{/link-to}}</li>
 	</ul>
 	<div class="col-sm-10">
-	  <div class="container">
-	    <div class="row">
+	  <div class="container-fluid">
+	    <div class="row-fluid">
 	      {{outlet}}
 	    </div>
 	  </div>
@@ -23,7 +23,7 @@
     </div>
   </script>
 
-  <script type="text/x-handlebars" data-template-name="App1-home">
+  <script type="text/x-handlebars" data-template-name="App1-index">
     <div class="page-header">
       <h2>Foo</h2>
     </div>
